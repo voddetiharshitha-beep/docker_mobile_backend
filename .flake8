@@ -1,0 +1,11 @@
+[flake8]
+max-line-length = 88
+exclude =
+    .git,
+    venv,
+    __pycache__,
+    migrations
+per-file-ignores =
+    docker_mobile_backend/settings/development.py:F403,F405
+    docker_mobile_backend/settings/production.py:F403,F405
+    docker_mobile_backend/settings/testing.py:F403,F405
