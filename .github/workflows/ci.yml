@@ -82,7 +82,7 @@ jobs:
           python manage.py migrate --noinput
 
       # 6. Run tests
-      - name: Run tests
+      - name: Run Django tests
         run: |
           python manage.py test
 
