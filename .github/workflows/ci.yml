@@ -94,4 +94,4 @@ jobs:
       # 8. Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t docker-mobile-backend:ci .
+          docker build -t docker-mobile-backend:${{ github.sha }} .
