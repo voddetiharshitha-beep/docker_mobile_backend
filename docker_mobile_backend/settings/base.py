@@ -19,11 +19,7 @@ SECRET_KEY = os.getenv(
     "django-insecure-development-only-key",
 )
 
-DEBUG = os.getenv(
-    "DEBUG",
-    "False",
-).lower() == "true"
-
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -101,26 +97,11 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv(
-            "POSTGRES_DB",
-            "docker_backend",
-        ),
-        "USER": os.getenv(
-            "POSTGRES_USER",
-            "docker_user",
-        ),
-        "PASSWORD": os.getenv(
-            "POSTGRES_PASSWORD",
-            "docker_password",
-        ),
-        "HOST": os.getenv(
-            "POSTGRES_HOST",
-            "postgres",
-        ),
-        "PORT": os.getenv(
-            "POSTGRES_PORT",
-            "5432",
-        ),
+        "NAME": os.getenv("POSTGRES_DB", "docker_backend"),
+        "USER": os.getenv("POSTGRES_USER", "docker_user"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "docker_password"),
+        "HOST": os.getenv("POSTGRES_HOST", "postgres"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -225,17 +206,11 @@ CELERY_RESULT_BACKEND = os.getenv(
 # ============================================================
 
 JWT_ACCESS_TOKEN_MINUTES = int(
-    os.getenv(
-        "JWT_ACCESS_TOKEN_MINUTES",
-        "30",
-    )
+    os.getenv("JWT_ACCESS_TOKEN_MINUTES", "30")
 )
 
 JWT_REFRESH_TOKEN_DAYS = int(
-    os.getenv(
-        "JWT_REFRESH_TOKEN_DAYS",
-        "1",
-    )
+    os.getenv("JWT_REFRESH_TOKEN_DAYS", "1")
 )
 
 
@@ -265,16 +240,10 @@ EMAIL_BACKEND = os.getenv(
     "django.core.mail.backends.console.EmailBackend",
 )
 
-EMAIL_HOST = os.getenv(
-    "EMAIL_HOST",
-    "",
-)
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
 
 EMAIL_PORT = int(
-    os.getenv(
-        "EMAIL_PORT",
-        "587",
-    )
+    os.getenv("EMAIL_PORT", "587")
 )
 
 EMAIL_USE_TLS = os.getenv(
@@ -282,15 +251,9 @@ EMAIL_USE_TLS = os.getenv(
     "True",
 ).lower() == "true"
 
-EMAIL_HOST_USER = os.getenv(
-    "EMAIL_HOST_USER",
-    "",
-)
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 
-EMAIL_HOST_PASSWORD = os.getenv(
-    "EMAIL_HOST_PASSWORD",
-    "",
-)
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 
 DEFAULT_FROM_EMAIL = os.getenv(
     "DEFAULT_FROM_EMAIL",
