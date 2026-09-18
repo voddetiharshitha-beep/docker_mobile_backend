@@ -1,5 +1,5 @@
-
 import os
+from datetime import timedelta
 from pathlib import Path
 
 
@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # ============================================================
 
 SECRET_KEY = os.getenv(
-    "DJANGO_SECRET_KEY",
+    "SECRET_KEY",
     "django-insecure-development-only-key",
 )
 
@@ -210,19 +210,34 @@ REDIS_URL = os.getenv(
 # ============================================================
 
 CELERY_BROKER_URL = os.getenv(
-    "CELERY_BROKER_URL",
+    "REDIS_URL",
     "redis://redis:6379/0",
 )
 
 CELERY_RESULT_BACKEND = os.getenv(
-    "CELERY_RESULT_BACKEND",
-    "redis://redis:6379/1",
+    "REDIS_URL",
+    "redis://redis:6379/0",
 )
 
 
 # ============================================================
 # JWT
 # ============================================================
+
+JWT_ACCESS_TOKEN_MINUTES = int(
+    os.getenv(
+        "JWT_ACCESS_TOKEN_MINUTES",
+        "30",
+    )
+)
+
+JWT_REFRESH_TOKEN_DAYS = int(
+    os.getenv(
+        "JWT_REFRESH_TOKEN_DAYS",
+        "1",
+    )
+)
+
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -232,8 +247,12 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": 30 * 60,
-    "REFRESH_TOKEN_LIFETIME": 1,
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        minutes=JWT_ACCESS_TOKEN_MINUTES,
+    ),
+    "REFRESH_TOKEN_LIFETIME": timedelta(
+        days=JWT_REFRESH_TOKEN_DAYS,
+    ),
 }
 
 
@@ -272,6 +291,7 @@ EMAIL_HOST_PASSWORD = os.getenv(
     "EMAIL_HOST_PASSWORD",
     "",
 )
+
 DEFAULT_FROM_EMAIL = os.getenv(
     "DEFAULT_FROM_EMAIL",
     "webmaster@localhost",
