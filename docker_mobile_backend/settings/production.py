@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from .base import *
 
+
 # ============================================================
 # PRODUCTION
 # ============================================================
@@ -14,7 +15,15 @@ DEBUG = False
 # SECRET KEY
 # ============================================================
 
-SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    os.environ.get("SECRET_KEY"),
+)
+
+if not SECRET_KEY:
+    raise RuntimeError(
+        "DJANGO_SECRET_KEY or SECRET_KEY must be set."
+    )
 
 
 # ============================================================
@@ -23,7 +32,10 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.environ.get("ALLOWED_HOSTS", "").split(",")
+    for host in os.environ.get(
+        "ALLOWED_HOSTS",
+        "*",
+    ).split(",")
     if host.strip()
 ]
 
@@ -32,25 +44,34 @@ ALLOWED_HOSTS = [
 # DATABASE
 # ============================================================
 
-DATABASES["default"].update({
+DATABASES["default"] = {
     "ENGINE": "django.db.backends.postgresql",
-    "NAME": os.environ["POSTGRES_DB"],
-    "USER": os.environ["POSTGRES_USER"],
-    "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-    "HOST": os.environ["POSTGRES_HOST"],
+    "NAME": os.environ.get("POSTGRES_DB", "docker_backend"),
+    "USER": os.environ.get("POSTGRES_USER", "docker_user"),
+    "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "docker_password"),
+    "HOST": os.environ.get("POSTGRES_HOST", "postgres"),
     "PORT": os.environ.get("POSTGRES_PORT", "5432"),
-})
+}
 
 
 # ============================================================
 # REDIS
 # ============================================================
 
-REDIS_URL = os.environ["REDIS_URL"]
+REDIS_URL = os.environ.get(
+    "REDIS_URL",
+    "redis://redis:6379/0",
+)
 
-CELERY_BROKER_URL = os.environ["CELERY_BROKER_URL"]
+CELERY_BROKER_URL = os.environ.get(
+    "CELERY_BROKER_URL",
+    REDIS_URL,
+)
 
-CELERY_RESULT_BACKEND = os.environ["CELERY_RESULT_BACKEND"]
+CELERY_RESULT_BACKEND = os.environ.get(
+    "CELERY_RESULT_BACKEND",
+    REDIS_URL,
+)
 
 
 # ============================================================
@@ -58,8 +79,12 @@ CELERY_RESULT_BACKEND = os.environ["CELERY_RESULT_BACKEND"]
 # ============================================================
 
 SIMPLE_JWT.update({
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        minutes=15,
+    ),
+    "REFRESH_TOKEN_LIFETIME": timedelta(
+        days=7,
+    ),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 })
@@ -69,23 +94,45 @@ SIMPLE_JWT.update({
 # EMAIL
 # ============================================================
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend",
+)
 
-EMAIL_HOST = os.environ["EMAIL_HOST"]
+EMAIL_HOST = os.environ.get(
+    "EMAIL_HOST",
+    "",
+)
 
 EMAIL_PORT = int(
-    os.environ.get("EMAIL_PORT", "587")
+    os.environ.get(
+        "EMAIL_PORT",
+        "587",
+    )
 )
 
 EMAIL_USE_TLS = (
-    os.environ.get("EMAIL_USE_TLS", "True").lower() == "true"
+    os.environ.get(
+        "EMAIL_USE_TLS",
+        "True",
+    ).lower()
+    == "true"
 )
 
-EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
+EMAIL_HOST_USER = os.environ.get(
+    "EMAIL_HOST_USER",
+    "",
+)
 
-EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+EMAIL_HOST_PASSWORD = os.environ.get(
+    "EMAIL_HOST_PASSWORD",
+    "",
+)
 
-DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL",
+    "webmaster@localhost",
+)
 
 
 # ============================================================
@@ -113,7 +160,8 @@ MEDIA_ROOT = BASE_DIR / "media"
 CORS_ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get(
-        "CORS_ALLOWED_ORIGINS", ""
+        "CORS_ALLOWED_ORIGINS",
+        "",
     ).split(",")
     if origin.strip()
 ]
@@ -128,7 +176,8 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.environ.get(
-        "CSRF_TRUSTED_ORIGINS", ""
+        "CSRF_TRUSTED_ORIGINS",
+        "",
     ).split(",")
     if origin.strip()
 ]
@@ -190,3 +239,4 @@ SECURE_REFERRER_POLICY = "same-origin"
 # ============================================================
 
 SECURE_BROWSER_XSS_FILTER = True
+
