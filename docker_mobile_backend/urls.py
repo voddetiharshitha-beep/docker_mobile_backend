@@ -1,23 +1,18 @@
-
 """
 URL configuration for docker_mobile_backend project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    2. Add an import:  from django.urls import include, path
-    3. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+The `urlpatterns` list routes URLs to views.
 """
 
 from django.contrib import admin
 from django.urls import path
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
+from api.views import TaskListCreateView
 
 from .views import (
     database_health_check,
@@ -28,6 +23,8 @@ from .views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # Health checks
     path("api/health/", health_check, name="health-check"),
     path(
         "api/health/database/",
@@ -39,5 +36,23 @@ urlpatterns = [
         redis_health_check,
         name="redis-health-check",
     ),
-]
 
+    # JWT authentication
+    path(
+        "api/auth/token/",
+        TokenObtainPairView.as_view(),
+        name="token-obtain-pair",
+    ),
+    path(
+        "api/auth/token/refresh/",
+        TokenRefreshView.as_view(),
+        name="token-refresh",
+    ),
+
+    # Business API
+    path(
+        "api/tasks/",
+        TaskListCreateView.as_view(),
+        name="task-list-create",
+    ),
+]

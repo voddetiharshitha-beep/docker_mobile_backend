@@ -12,3 +12,5 @@ venv/
 htmlcov/
 postgres_backup.sql
 backup.sql
+# Local Nginx SSL certificates
+nginx/certs/

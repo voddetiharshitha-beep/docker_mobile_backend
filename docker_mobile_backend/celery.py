@@ -4,14 +4,14 @@ from celery import Celery
 
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE",
-    "docker_mobile_backend.settings"
+    "docker_mobile_backend.settings.production",
 )
 
 app = Celery("docker_mobile_backend")
 
 app.config_from_object(
     "django.conf:settings",
-    namespace="CELERY"
+    namespace="CELERY",
 )
 
-app.autodiscover_tasks()
+app.autodiscover_tasks(["docker_mobile_backend"])
