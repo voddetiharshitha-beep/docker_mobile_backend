@@ -12,17 +12,32 @@ Class-based views
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
 Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+    2. Add an import:  from django.urls import include, path
+    3. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
 from django.contrib import admin
 from django.urls import path
 
-from .views import health_check
+from .views import (
+    database_health_check,
+    health_check,
+    redis_health_check,
+)
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/health/", health_check, name="health-check"),
+    path(
+        "api/health/database/",
+        database_health_check,
+        name="database-health-check",
+    ),
+    path(
+        "api/health/redis/",
+        redis_health_check,
+        name="redis-health-check",
+    ),
 ]
+
